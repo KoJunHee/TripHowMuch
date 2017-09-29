@@ -16,4 +16,4 @@ module.exports = [
     { method: 'POST', path: '/comments/undercomment', config: controller.createUnderComment },   //create
     { method: 'PUT', path: '/comments/{commentID}', config: controller.update },   //update
     { method: 'DELETE', path: '/comments/{commentID}', config: controller.destroy }    //destroy
-];knnnk;nknkj
+];
