@@ -93,10 +93,11 @@ exports.createUnderPost = {
             parentID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         request.payload.writer = request.auth.userId;   //댓글 작성자
         request.payload.parent = 'post';    //댓글의 부모
+        console.log(request.payload);
 
         // 생성
         Comments.create(request.payload)

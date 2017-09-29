@@ -36,33 +36,8 @@ exports.findAllSearch = {
         }
     },
     auth: false,
-    handler: function (request, reply) {   
-        Posts.find({[request.query.type]: '%' + request.query.keyword + '%'})
-            .exec(function (err, posts) {
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(posts);
-            });
-    }
-};
-
-
-
-
-
-//find by writer nickname
-exports.findByNickname = {
-    description: '작성자로 게시글 검색',
-    tags: ['api'],
-    validate: {
-        params: {
-            writerNickname: Joi.string().required()
-        }
-    },
-    auth: false,
     handler: function (request, reply) {
-        Posts.find({ writerNickname: request.params.writerNickname })
+        Posts.find({ [request.query.type]: '%' + request.query.keyword + '%' }) 
             .exec(function (err, posts) {
                 if (err) {
                     return reply(Boom.badImplementation(err));
@@ -72,47 +47,6 @@ exports.findByNickname = {
     }
 };
 
-//find by title
-exports.findByTitle = {
-    description: '제목으로 게시글 검색',
-    tags: ['api'],
-    validate: {
-        params: {
-            title: Joi.string().required()
-        }
-    },
-    auth: false,
-    handler: function (request, reply) {
-        Posts.find({ title: /request.params.title/ })
-            .exec(function (err, posts) {
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(posts);
-            });
-    }
-};
-
-//find by body
-exports.findByBody = {
-    description: '내용으로 게시글 검색',
-    tags: ['api'],
-    validate: {
-        params: {
-            body: Joi.string().required()
-        }
-    },
-    auth: false,
-    handler: function (request, reply) {
-        Posts.find({ body: /request.params.body/ })
-            .exec(function (err, posts) {
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(posts);
-            });
-    }
-};
 
 
 // find one data

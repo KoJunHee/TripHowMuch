@@ -55,13 +55,23 @@ exports.create = {
     },
     auth: false,
     handler: function (request, reply) {
-        Users.create(request.payload)
+        Users.findOne({ email: request.payload.email })
             .exec(function (err, user) {
                 if (err) {
                     reply(Boom.badImplementation(err));
                 }
-                reply(user);
-            });
+                if (!user) {     //회원가입하려는 이메일이 존재 하지 않으면 생성                
+                    Users.create(request.payload)
+                        .exec(function (err, user) {
+                            if (err) {
+                                reply(Boom.badImplementation(err));
+                            }
+                            reply(user);
+                        });
+                }
+                else
+                    reply('user already exists');
+            })
     }
 };
 

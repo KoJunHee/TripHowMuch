@@ -187,4 +187,7 @@ server.register([
     });
 });
 
+// var corsHeaders = require('hapi-cors-headers')
+// server.ext('onPreResponse', addCorsHeaders)
+
 module.exports = server;
