@@ -13,7 +13,7 @@ var Boom = require('boom'),
 exports.findAll = {
     description: '게시글 목록 조회',
     tags: ['api'],
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Posts.find({})
             .exec(function (err, posts) {
@@ -25,6 +25,96 @@ exports.findAll = {
     }
 };
 
+//search data
+exports.findAllSearch = {
+    description: '게시글 검색',
+    tags: ['api'],
+    validate: {
+        query: {
+            type: Joi.string().valid('writerNickname', 'title', 'body').required(),
+            keyword: Joi.string().required()
+        }
+    },
+    auth: false,
+    handler: function (request, reply) {   
+        Posts.find({[request.query.type]: '%' + request.query.keyword + '%'})
+            .exec(function (err, posts) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(posts);
+            });
+    }
+};
+
+
+
+
+
+//find by writer nickname
+exports.findByNickname = {
+    description: '작성자로 게시글 검색',
+    tags: ['api'],
+    validate: {
+        params: {
+            writerNickname: Joi.string().required()
+        }
+    },
+    auth: false,
+    handler: function (request, reply) {
+        Posts.find({ writerNickname: request.params.writerNickname })
+            .exec(function (err, posts) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(posts);
+            });
+    }
+};
+
+//find by title
+exports.findByTitle = {
+    description: '제목으로 게시글 검색',
+    tags: ['api'],
+    validate: {
+        params: {
+            title: Joi.string().required()
+        }
+    },
+    auth: false,
+    handler: function (request, reply) {
+        Posts.find({ title: /request.params.title/ })
+            .exec(function (err, posts) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(posts);
+            });
+    }
+};
+
+//find by body
+exports.findByBody = {
+    description: '내용으로 게시글 검색',
+    tags: ['api'],
+    validate: {
+        params: {
+            body: Joi.string().required()
+        }
+    },
+    auth: false,
+    handler: function (request, reply) {
+        Posts.find({ body: /request.params.body/ })
+            .exec(function (err, posts) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(posts);
+            });
+    }
+};
+
+
 // find one data
 exports.find = {
     description: '게시글 상세 조회',
@@ -34,7 +124,7 @@ exports.find = {
             postID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Posts.findOne({ id: request.params.postID })
             .exec(function (err, post) {
@@ -83,17 +173,29 @@ exports.create = {
             body: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
-        //게시글 작성자 = 현재 유저 아이디
-        request.payload.author = request.auth.userId;
-        Posts.create(request.payload)
-            .exec(function (err, post) {
-                if (err) {
+
+        //현재 유저의 닉네임 찾기
+        Users.findOne({ id: request.auth.userId })
+            .exec(function (err, user) {
+                if (err)
                     return reply(Boom.badImplementation(err));
-                }
-                reply(post);
+
+                request.payload.writerNickname = user.nickname;
+
+                //개시물 등록
+                Posts.create(request.payload)
+                    .exec(function (err, post) {
+                        if (err) {
+                            return reply(Boom.badImplementation(err));
+                        }
+                        reply(post);
+                    });
+
             });
+
+
     }
 };
 
@@ -131,7 +233,7 @@ exports.destroy = {
             postID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Posts.destroy({ id: request.params.postID })
             .exec(function (err) {

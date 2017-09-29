@@ -13,7 +13,7 @@ var Boom = require('boom'),
 exports.findAll = {
     description: '전체 댓글 목록 조회',
     tags: ['api'],
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         // 전체 조회
         Comments.find({})
@@ -36,7 +36,7 @@ exports.findMore = {
             commentID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         // 조회
         Comments.find({ parentID: request.params.commentID })
@@ -69,7 +69,7 @@ exports.find = {
             commentID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         // 조회
         Comments.findOne({ id: request.params.commentID })
@@ -93,7 +93,7 @@ exports.createUnderPost = {
             parentID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         request.payload.writer = request.auth.userId;   //댓글 작성자
         request.payload.parent = 'post';    //댓글의 부모
@@ -120,7 +120,7 @@ exports.createUnderComment = {
             parentID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         request.payload.writer = request.auth.userId;   //댓글 작성자 = 현재 유저 아이디
         request.payload.parent = 'comment';    //댓글의 부모
@@ -149,7 +149,7 @@ exports.update = {
             content: Joi.string().required(),
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         // 수정
         Comments.update({ id: request.params.commentID }, request.payload)

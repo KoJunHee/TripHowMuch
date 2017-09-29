@@ -23,9 +23,9 @@ module.exports = {
             type: 'integer',
             defaultsTo: 0
         },
-        author: {
-            type: 'integer'
-            //required: true
+        writerNickname: {
+            type: 'string',
+            required: true
         }
     }
 };

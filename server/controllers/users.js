@@ -117,7 +117,7 @@ exports.destroy = {
 exports.destroyAll = {
     description: '모든 유저 삭제',
     tags: ['api'],
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Users.destroy({})
             .exec(function (err) {
