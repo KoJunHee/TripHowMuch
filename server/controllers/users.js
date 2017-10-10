@@ -48,7 +48,7 @@ exports.create = {
     tags: ['api'],
     validate: {
         payload: {
-            email: Joi.string().required(),
+            email: Joi.string().required(),                                     
             nickname: Joi.string().required(),
             password: Joi.string().required()
         }

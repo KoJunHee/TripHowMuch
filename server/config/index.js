@@ -5,7 +5,7 @@ var config = {
         port: 8000,
         labels: ['api'],
         routes:{
-            cors:true
+            cors:true   //원격 접속 가능하도록
         }
     },
     database: {

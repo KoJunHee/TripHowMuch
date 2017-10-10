@@ -1,8 +1,8 @@
 /*
-* posts Controller
+* posts Controller                                                                                                                          
 * Created by ikoobmacpro on 2017.09.27..
 * Copyright (c) 2017 ikoobmacpro. All rights reserved.
-*/
+*/          
 
 'use strict';
 
