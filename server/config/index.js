@@ -3,7 +3,10 @@ var config = {
     server: {
         host: '192.168.1.182',
         port: 8000,
-        labels: ['api']
+        labels: ['api'],
+        routes:{
+            cors:true
+        }
     },
     database: {
         mongo: {

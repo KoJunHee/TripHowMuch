@@ -13,7 +13,7 @@ var Boom = require('boom'),
 exports.findAll = {
     description: '게시글 목록 조회',
     tags: ['api'],
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Posts.find({})
             .exec(function (err, posts) {
@@ -35,7 +35,7 @@ exports.findAllSearch = {
             keyword: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Posts.find({ [request.query.type]: '%' + request.query.keyword + '%' }) 
             .exec(function (err, posts) {
@@ -58,7 +58,7 @@ exports.find = {
             postID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Posts.findOne({ id: request.params.postID })
             .exec(function (err, post) {
@@ -107,7 +107,7 @@ exports.create = {
             body: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
 
         //현재 유저의 닉네임 찾기
@@ -146,7 +146,7 @@ exports.update = {
             body: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Posts.update({ id: request.params.postID }, request.payload)
             .exec(function (err, posts) {
@@ -167,7 +167,7 @@ exports.destroy = {
             postID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Posts.destroy({ id: request.params.postID })
             .exec(function (err) {

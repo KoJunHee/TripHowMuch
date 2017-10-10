@@ -36,7 +36,7 @@ exports.findMore = {
             commentID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         // 조회
         Comments.find({ parentID: request.params.commentID })
@@ -69,7 +69,7 @@ exports.find = {
             commentID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         // 조회
         Comments.findOne({ id: request.params.commentID })
@@ -121,10 +121,11 @@ exports.createUnderComment = {
             parentID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         request.payload.writer = request.auth.userId;   //댓글 작성자 = 현재 유저 아이디
         request.payload.parent = 'comment';    //댓글의 부모
+        console.log("use id : " + request.auth.userId);
 
         // 생성
         Comments.create(request.payload)
@@ -150,7 +151,7 @@ exports.update = {
             content: Joi.string().required(),
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         // 수정
         Comments.update({ id: request.params.commentID }, request.payload)
@@ -173,7 +174,7 @@ exports.destroy = {
             commentID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         // 삭제
         Comments.destroy({ id: request.params.commentID })

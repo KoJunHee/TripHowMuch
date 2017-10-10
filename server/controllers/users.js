@@ -9,7 +9,7 @@ var Boom = require('boom'),
 exports.findAll = {
     description: '유저 목록 조회',
     tags: ['api'],
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Users.find({})
             .exec(function (err, users) {
@@ -30,7 +30,7 @@ exports.find = {
             userID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Users.findOne({ id: request.params.userID })
             .exec(function (err, user) {
@@ -89,7 +89,7 @@ exports.update = {
             password: Joi.string().required()
         }).meta({ className: 'payload' })
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         // 수정
         Users.update({ id: request.params.userID }, request.payload)
@@ -111,7 +111,7 @@ exports.destroy = {
             userID: Joi.string().required()
         }
     },
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Users.destroy({ id: request.params.userID })
             .exec(function (err) {
@@ -127,7 +127,7 @@ exports.destroy = {
 exports.destroyAll = {
     description: '모든 유저 삭제',
     tags: ['api'],
-    auth: false,
+    //auth: false,
     handler: function (request, reply) {
         Users.destroy({})
             .exec(function (err) {
@@ -174,7 +174,7 @@ exports.loginJWT = {
                         nickname: user.nickname,
                         token: jwt.sign(tokenData, 'app_server!!!')
                     };
-                    console.log(res);
+                    console.log("결과 : " + res.nickname);
                     reply(res);
                 } else {
                     return reply(Boom.unauthorized('invaild password'));
