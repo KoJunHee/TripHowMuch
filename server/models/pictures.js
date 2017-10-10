@@ -1,28 +1,28 @@
 /*
-* comments Model
-* Created by ikoobmacpro on 2017.09.28..
+* pictures Model
+* Created by ikoobmacpro on 2017.10.10..
 * Copyright (c) 2017 ikoobmacpro. All rights reserved.
 */
 
 'use strict';
 
 module.exports = {
-    tableName: 'comments',                   // lower case collection or table name
+    tableName: 'pictures',                   // lower case collection or table name
     connection: 'mongoConnection',      // database connection
     attributes: {
-        content: {
+        base64: {
             type: 'string',
             required: true
         },
-        writer: {
+        title: {
             type: 'string',
             required: true
         },
-        parent: {                       //댓글에 대한 댓글인지, 게시물에 대한 댓글인지
-            type: 'string',
-            required: true,
+        viewCnt: {
+            type: 'integer',
+            defaultsTo: 0
         },
-        parentID: {
+        writerNickname: {
             type: 'string',
             required: true
         },

@@ -4,8 +4,8 @@ var config = {
         host: '192.168.1.182',
         port: 8000,
         labels: ['api'],
-        routes:{
-            cors:true   //원격 접속 가능하도록
+        routes: {
+            cors: { credentials: `true` }
         }
     },
     database: {
@@ -18,6 +18,5 @@ var config = {
         }
     }
 };
-
 module.exports = config;
 

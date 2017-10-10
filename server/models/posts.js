@@ -26,6 +26,11 @@ module.exports = {
         writerNickname: {
             type: 'string',
             required: true
+        },
+        deleteAndUpdate: {
+            type: 'string',
+            required: true,
+            defaultsTo: 'impossible'
         }
     }
 };

@@ -9,7 +9,7 @@ var Boom = require('boom'),
 exports.findAll = {
     description: '유저 목록 조회',
     tags: ['api'],
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Users.find({})
             .exec(function (err, users) {
@@ -48,7 +48,7 @@ exports.create = {
     tags: ['api'],
     validate: {
         payload: {
-            email: Joi.string().required(),                                     
+            email: Joi.string().required(),
             nickname: Joi.string().required(),
             password: Joi.string().required()
         }

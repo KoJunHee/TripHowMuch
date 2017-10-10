@@ -47,13 +47,13 @@ exports.findMore = {
                 }
 
                 //대댓글 수정 삭제 권한 확인
-                for(var i=0; i<comments.length; i++){
+                for (var i = 0; i < comments.length; i++) {
                     //초기화
                     comments[i].deleteAndUpdate = 'impossible'
 
                     // 현재 유저아이디와 댓글의 작성자와 같으면
-                    if(comments[i].writer==request.auth.userId)
-                        comments[i].deleteAndUpdate = 'possible';        
+                    if (comments[i].writer == request.auth.userId)
+                        comments[i].deleteAndUpdate = 'possible';
                 }
                 reply(comments);
             });
