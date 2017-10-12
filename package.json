@@ -36,7 +36,6 @@
     "hapi": "^15.1.1",
     "hapi-auth-jwt": "^4.0.0",
     "hapi-cors-headers": "^1.0.0",
-    "hapi-passport": "0.0.6",
     "hapi-swaggered": "^2.7.0",
     "hapi-swaggered-ui": "^2.5.1",
     "inert": "^4.0.2",
@@ -44,8 +43,6 @@
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
-    "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1",
     "samdasoo": "^0.7.24",
     "vision": "^4.1.0"
   },

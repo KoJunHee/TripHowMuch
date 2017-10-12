@@ -59,7 +59,7 @@ exports.create = {
         //이메일 존재 여부 확인
         Users.findOne({ email: request.payload.email })
             .exec(function (err, user) {
-                
+
                 if (err)
                     reply(Boom.badImplementation(err));
 
@@ -150,7 +150,7 @@ exports.destroyAll = {
 
 //token login
 exports.loginJWT = {
-    description: 'token 로그인',
+    description: '토큰 로그인',
     tags: ['api'],
     validate: {
         payload: {
@@ -172,7 +172,7 @@ exports.loginJWT = {
                 if (!user) {
                     return reply(Boom.unauthorized('invaild email'));
                 }
-               
+
                 //로그인시 입력한 pwd,
                 //디비에 저장된 hashing pwd
                 //비교
@@ -197,12 +197,123 @@ exports.loginJWT = {
     }
 };
 
+//facebook routing
+exports.loginFB = {
+    description: '페이스북 로그인',
+    tags: ['api'],
+    auth: 'facebook',
+    handler: function (request, reply) {
+
+        if (!request.auth.isAuthenticated) {
+            return reply('Authentication failed due to: ' + request.auth.error.message);
+        }
+
+        //authId가 유저 디비에 있는지 check
+        Users.findOne({ authId: request.auth.credentials.profile.id })
+            .exec(function (err, user) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                //디비에 등록되지 않은 유저라면
+                if (!user) {
+                    //유저 생성
+                    var newUser = {
+                        nickname: request.auth.credentials.profile.displayName,
+                        authId: request.auth.credentials.profile.id
+                    }
+                    Users.create(newUser)
+                        .exec(function (err, user) {
+                            if (err) {
+                                reply(Boom.badImplementation(err));
+                            }
+                            //토큰 부여
+                            var tokenData = {
+                                nickname: user.nickname,
+                                email: user.email,
+                                id: user.id
+                            };
+                            var res = {
+                                token: jwt.sign(tokenData, 'app_server!!!')
+                            };
+                            reply(res);
+
+                        });
+                } else {
+                    //등록된 유저라면
+                    //토큰 부여
+                    var tokenData = {
+                        nickname: user.nickname,
+                        email: user.email,
+                        id: user.id
+                    };
+                    var res = {
+                        token: jwt.sign(tokenData, 'app_server!!!')
+                    };
+                    reply(res);
+                }
+            });
+    }
+};
 
 
+//google routing
+exports.loginGG = {
+    description: '구글 로그인',
+    tags: ['api'],
+    // config: {
+    auth: 'google',
+    handler: function (request, reply) {
+
+        if (!request.auth.isAuthenticated) {
+            return reply('Authentication failed due to: ' + request.auth.error.message);
+        }
 
 
+        //authId가 유저 디비에 있는지 check
+        Users.findOne({ authId: request.auth.credentials.profile.id })
+            .exec(function (err, user) {
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
 
+                //디비에 등록되지 않은 유저라면
+                if (!user) {
+                    //유저 생성
+                    var newUser = {
+                        nickname: request.auth.credentials.profile.displayName,
+                        authId: request.auth.credentials.profile.id,
+                        email: request.auth.credentials.profile.email
+                    }
+                    Users.create(newUser)
+                        .exec(function (err, user) {
+                            if (err)
+                                reply(Boom.badImplementation(err));
 
-
-
-
+                            //토큰 부여                                            
+                            var tokenData = {
+                                nickname: user.nickname,
+                                email: user.email,
+                                id: user.id
+                            }
+                            var res = {
+                                token: jwt.sign(tokenData, 'app_server!!!')
+                            };
+                            reply(res);
+                        });
+                } else {
+                    //등록된 유저라면
+                    //토큰 부여
+                    var tokenData = {
+                        nickname: user.nickname,
+                        email: user.email,
+                        id: user.id
+                    }
+                    var res = {
+                        token: jwt.sign(tokenData, 'app_server!!!')
+                    };
+                    reply(res);
+                }
+            });
+    }
+    // }
+};
