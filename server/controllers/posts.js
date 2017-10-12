@@ -51,7 +51,7 @@ exports.findAllSearch = {
 
 // find one data
 exports.find = {
-    description: '게시글 상세 조회 : 현재 유저와 게시글 올린 사람 같으면 수정 삭제 가능 ',
+    description: '게시글 상세 조회 : 현재 유저와 게시글 올린 사람 같으면 수정 삭제 가능 / 현재 유저와 게시글에 대한 댓글을 단 사람 같으면 수정 삭제 가능',
     tags: ['api'],
     validate: {
         params: {

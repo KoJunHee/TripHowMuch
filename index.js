@@ -8,7 +8,6 @@ var Boom = require('boom'),
     PackageInfo = require('./package.json'),
     Path = require('path'),
     _ = require('lodash');
-
 var server = new Hapi.Server();
 server.connection(Config.server);
 
@@ -46,12 +45,12 @@ server.register([
     {
         register: require('hapi-auth-jwt')
     }], {
-    select: 'api'
-}, function (err) {
-    if (err) {
-        throw err;
-    }
-});
+        select: 'api'
+    }, function (err) {
+        if (err) {
+            throw err;
+        }
+    });
 
 
 
@@ -79,7 +78,7 @@ server.register([
         options: {
             config: Config.database,
             migrate: 'safe',        // safe, drop, alter   
-                                    //drop : 원래 있던 데이터 지웜 .. safe: 필드만 추가
+            //drop : 원래 있던 데이터 지웜 .. safe: 필드만 추가
             modelPath: Path.join(__dirname, '/server/models'),
             useGlobalModel: true
         }
@@ -163,7 +162,7 @@ server.register([
         }
     });
 
-// server health check
+    // server health check
     server.route({
         method: 'GET',
         path: '/health',
@@ -174,6 +173,7 @@ server.register([
             }
         }
     });
+
 
     // route
     require('./server/routes')(server);

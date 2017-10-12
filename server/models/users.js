@@ -10,15 +10,24 @@ module.exports = {
             required: true,
             unique: true
         },
+        password: {
+            type: 'string',
+            required: true,
+        },
         nickname: {
             type: 'string',
             required: true,
             unique: true
         },
-        password: {
+        authId:{
             type: 'string',
-            required: true,
+            defaultsTo: '0'
+        },
+        at:{
+            type: 'string',
+            defaultsTo: '0'            
         }
+        
     }
     // beforeCreate: function (item, next) {
     //     next();

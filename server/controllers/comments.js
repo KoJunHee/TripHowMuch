@@ -29,7 +29,7 @@ exports.findAll = {
 
 //find more data
 exports.findMore = {
-    description: '대댓글 조회',
+    description: '대댓글 조회 : 현재 유저와 대댓글 단 사람이 같으면 수정 삭제 가능',
     tags: ['api'],
     validate: {
         params: {
