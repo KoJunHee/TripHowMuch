@@ -8,31 +8,22 @@ module.exports = {
         email: {
             type: 'string',
             required: true,
-            unique: true
+            unique: true,
+            defaultsTo: '0'
         },
         password: {
             type: 'string',
             required: true,
+            defaultsTo: '0'
         },
         nickname: {
             type: 'string',
             required: true,
-            unique: true
+            defaultsTo: '0'
         },
         authId:{
             type: 'string',
             defaultsTo: '0'
-        },
-        at:{
-            type: 'string',
-            defaultsTo: '0'            
         }
-        
     }
-    // beforeCreate: function (item, next) {
-    //     next();
-    // },
-    // afterCreate:function(item, next){
-    //     next();
-    // }
 };

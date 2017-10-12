@@ -7,8 +7,12 @@ var Boom = require('boom'),
     Moment = require('moment'),
     PackageInfo = require('./package.json'),
     Path = require('path'),
-    _ = require('lodash');
-var server = new Hapi.Server();
+    _ = require('lodash'),
+    jwt = require('jsonwebtoken'),
+    bell = require('bell'),
+    server = new Hapi.Server();
+
+
 server.connection(Config.server);
 
 server.register([
@@ -136,58 +140,166 @@ server.register([
         reply.continue();
     });
 
-    // file route
-    server.route({
-        method: 'GET',
-        path: '/files/{path*2}',
-        config: {
-            auth: false,
-            handler: function (request, reply) {
-                var filePath = __dirname + '/files';
-                try {
-                    var folders = fs.readdirSync(filePath);
 
-                    var path = request.params.path.split('/');
-                    var index = _.indexOf(folders, path[0]);
-                    if (index > -1) {
-                        reply.file(filePath + '/' + folders[index] + '/' + path[1]);
-                    } else {
-                        reply(Boom.notFound('missing path'));
+
+    //facebook login
+    server.register(bell, function (err) {
+
+        //facebook
+        server.auth.strategy('facebook', 'bell', {
+            provider: 'facebook',
+            password: 'cookie_encryption_password_secure',
+            clientId: '2044409819105751',
+            clientSecret: '6b7e9416e86b38c1f7075ed4d829f1fb',
+            isSecure: false
+        });
+
+        //google
+        server.auth.strategy('google', 'bell', {
+            provider: 'google',
+            password: 'cookie_encryption_password_secure',
+            clientId: '506238861912-n8t00jtopd1ltgfb87gv1vheolmhkdtm.apps.googleusercontent.com',
+            clientSecret: 'covirPl7PhuVHlae6VQODDiO',
+            isSecure: false
+        });
+
+        //facebook routing
+        server.route({
+            method: 'GET',
+            path: '/login/facebook',
+            config: {
+                auth: 'facebook',
+                handler: function (request, reply) {
+
+                    if (!request.auth.isAuthenticated) {
+                        return reply('Authentication failed due to: ' + request.auth.error.message);
                     }
-                } catch (e) {
-                    console.log(e);
-                    reply(Boom.notFound('missing file or path'));
+
+                    //authId가 유저 디비에 있는지 check
+                    Users.findOne({ authId: request.auth.credentials.profile.id })
+                        .exec(function (err, user) {
+                            if (err) {
+                                return reply(Boom.badImplementation(err));
+                            }
+                            //디비에 등록되지 않은 유저라면
+                            if (!user) {
+                                //유저 생성
+                                var newUser = {
+                                    nickname: request.auth.credentials.profile.displayName,
+                                    authId: request.auth.credentials.profile.id
+                                }
+                                Users.create(newUser)
+                                    .exec(function (err, user) {
+                                        if (err) {
+                                            reply(Boom.badImplementation(err));
+                                        }
+                                        //토큰 부여
+                                        var tokenData = {
+                                            nickname: user.nickname,
+                                            email: user.email,
+                                            id: user.id
+                                        };
+                                        var res = {
+                                            token: jwt.sign(tokenData, 'app_server!!!')
+                                        };
+                                        reply(res);
+
+                                    });
+                            } else {
+                                //등록된 유저라면
+                                //토큰 부여
+                                var tokenData = {
+                                    nickname: user.nickname,
+                                    email: user.email,
+                                    id: user.id
+                                };
+                                var res = {
+                                    token: jwt.sign(tokenData, 'app_server!!!')
+                                };
+                                reply(res);
+                            }
+                        });
                 }
             }
-        }
+        });
+
+        //google routing
+        server.route({
+            method: 'GET',
+            path: '/login/google',
+            config: {
+                auth: 'google',
+                handler: function (request, reply) {
+
+                    if (!request.auth.isAuthenticated) {
+                        return reply('Authentication failed due to: ' + request.auth.error.message);
+                    }
+
+
+                    //authId가 유저 디비에 있는지 check
+                    Users.findOne({ authId: request.auth.credentials.profile.id })
+                        .exec(function (err, user) {
+                            if (err) {
+                                return reply(Boom.badImplementation(err));
+                            }
+
+                            //디비에 등록되지 않은 유저라면
+                            if (!user) {
+                                //유저 생성
+                                var newUser = {
+                                    nickname: request.auth.credentials.profile.displayName,
+                                    authId: request.auth.credentials.profile.id,
+                                    email: request.auth.credentials.profile.email
+                                }
+                                Users.create(newUser)
+                                    .exec(function (err, user) {
+                                        if (err)
+                                            reply(Boom.badImplementation(err));
+
+                                        //토큰 부여                                            
+                                        var tokenData = {
+                                            nickname: user.nickname,
+                                            email: user.email,
+                                            id: user.id
+                                        }
+                                        var res = {
+                                            token: jwt.sign(tokenData, 'app_server!!!')
+                                        };
+                                        reply(res);
+                                    });
+                            } else {
+                                //등록된 유저라면
+                                //토큰 부여
+                                var tokenData = {
+                                    nickname: user.nickname,
+                                    email: user.email,
+                                    id: user.id
+                                }
+                                var res = {
+                                    token: jwt.sign(tokenData, 'app_server!!!')
+                                };
+                                reply(res);
+                            }
+                        });
+                }
+            }
+        });
     });
 
-    // server health check
-    server.route({
-        method: 'GET',
-        path: '/health',
-        config: {
-            auth: false,
-            handler: function (request, reply) {
-                reply({ result: true });
-            }
-        }
-    });
 
 
     // route
     require('./server/routes')(server);
 
-    // server.emit('pluginsLoaded');
 
     // start server
     server.start(function () {
         // start log
         console.log('\x1b[32m>>\x1b[0m', Config.name + ' Server running at :', '\x1b[1m\x1b[32m' + server.info.uri + '\x1b[0m');
     });
+
+
 });
 
-// var corsHeaders = require('hapi-cors-headers')
-// server.ext('onPreResponse', addCorsHeaders)
 
 module.exports = server;
