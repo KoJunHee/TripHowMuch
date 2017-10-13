@@ -12,7 +12,6 @@ var Boom = require('boom'),
     bell = require('bell'),
     server = new Hapi.Server();
 
-
 server.connection(Config.server);
 
 server.register([
@@ -59,7 +58,6 @@ server.register([
 
 //facebook login
 server.register(bell, function (err) {
-    
         //facebook
         server.auth.strategy('facebook', 'bell', {
             provider: 'facebook',

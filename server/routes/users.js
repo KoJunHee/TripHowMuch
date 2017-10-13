@@ -10,6 +10,6 @@ module.exports = [
     { method: 'DELETE', path: '/users/{userID}', config: Controller.destroy },   //destroy
     { method: 'DELETE', path: '/users', config: Controller.destroyAll },   //destroyAll    
     { method: 'POST', path: '/login', config: Controller.loginJWT }, //token login
-    { method: 'GET', path: '/login/facebook', config: Controller.loginFB }, //facebook login
-    { method: 'GET', path: '/login/google', config: Controller.loginGG }, //google login  
+    { method: 'GET', path: '/login/facebook', config: Controller.loginFB } //facebook login
+    // { method: 'GET', path: '/login/google', config: Controller.loginGG } //google login  
 ];

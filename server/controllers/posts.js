@@ -116,13 +116,14 @@ exports.create = {
     validate: {
         payload: {
             title: Joi.string().required(),
-            body: Joi.string().required()
+            body: Joi.string().required(),
+            base64: Joi.string()
         }
     },
     //auth: false,
     handler: function (request, reply) {
 
-        //현재 유저의 닉네임 찾기
+        //현재 유저의 id 찾기
         Users.findOne({ id: request.auth.userId })
             .exec(function (err, user) {
                 if (err) {
@@ -154,7 +155,8 @@ exports.update = {
         },
         payload: {
             title: Joi.string().required(),
-            body: Joi.string().required()
+            body: Joi.string().required(),
+            base64: Joi.string()
         }
     },
     //auth: false,
@@ -178,7 +180,7 @@ exports.destroy = {
             postID: Joi.string().required()
         }
     },
-    //auth: false,
+    auth: false,
     handler: function (request, reply) {
         Posts.destroy({ id: request.params.postID })
             .exec(function (err) {

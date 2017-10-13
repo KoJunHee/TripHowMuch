@@ -8,8 +8,7 @@ module.exports = {
         email: {
             type: 'string',
             required: true,
-            unique: true,
-            defaultsTo: '0'
+            defaultsTo: '0'            
         },
         password: {
             type: 'string',

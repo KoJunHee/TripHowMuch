@@ -1,7 +1,7 @@
 var config = {
     name: 'API',
     server: {
-        host: '127.0.0.1',
+        host: '192.168.1.182',
         port: 8000,
         labels: ['api'],
         routes: {

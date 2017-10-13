@@ -27,6 +27,9 @@ module.exports = {
             type: 'string',
             required: true
         },
+        base64:{
+            type: 'string'
+        },
         deleteAndUpdate: {
             type: 'string',
             required: true,
