@@ -1,18 +1,10 @@
 {
-  "name": "API_Server",
+  "name": "tripHowMuch",
   "description": "API Server",
-  "version": "0.5.0",
-  "homepage": "http://ikoobpro.iptime.org:8089/server/api_server",
+  "version": "0.0.0",
   "author": {
-    "name": "yeop.hyun",
-    "email": "yeop.hyun@ikoob.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://ikoobpro.iptime.org:8089/server/api_server.git"
-  },
-  "bugs": {
-    "url": "http://ikoobpro.iptime.org:8089/server/api_server.git/issues"
+    "name": "junhee.ko",
+    "email": "kjh338076@gmail.com"
   },
   "licenses": [
     {
@@ -43,7 +35,8 @@
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
-    "samdasoo": "^0.7.24",
+    "querystring": "^0.2.0",
+    "samdasoo": "^0.7.25",
     "vision": "^4.1.0"
   },
   "devDependencies": {

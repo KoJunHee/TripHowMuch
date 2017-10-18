@@ -121,21 +121,21 @@ server.register([
     }
     // $lab:coverage:on$
 
-    // set auth
-    server.auth.strategy('token', 'jwt', {
-        key: 'app_server!!!',
-        validateFunc: function (request, decodedToken, callback) {
-            // Check token timestamp
-            //console.log('decodedToken', decodedToken);
-            var moment = new Moment(decodedToken.iat * 1000);
-            var diff = moment.diff(moment);
-            if (diff > 30 * 24 * 60 * 60 * 1000) { // 30 days
-                return callback(null, false);
-            }
-            callback(null, true, decodedToken);
-        }
-    });
-    server.auth.default('token');
+    // // set auth
+    // server.auth.strategy('token', 'jwt', {
+    //     key: 'app_server!!!',
+    //     validateFunc: function (request, decodedToken, callback) {
+    //         // Check token timestamp
+    //         //console.log('decodedToken', decodedToken);
+    //         var moment = new Moment(decodedToken.iat * 1000);
+    //         var diff = moment.diff(moment);
+    //         if (diff > 30 * 24 * 60 * 60 * 1000) { // 30 days
+    //             return callback(null, false);
+    //         }
+    //         callback(null, true, decodedToken);
+    //     }
+    // });
+    // server.auth.default('token');
 
     // before handler
     server.ext('onPostAuth', function (request, reply) {
@@ -159,9 +159,6 @@ server.register([
         }
         reply.continue();
     });
-
-
-
 
 
     // route
