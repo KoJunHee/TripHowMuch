@@ -56,28 +56,6 @@ server.register([
     });
 
 
-//facebook login
-server.register(bell, function (err) {
-        //facebook
-        server.auth.strategy('facebook', 'bell', {
-            provider: 'facebook',
-            password: 'cookie_encryption_password_secure',
-            clientId: '2044409819105751',
-            clientSecret: '6b7e9416e86b38c1f7075ed4d829f1fb',
-            isSecure: false
-        });
-    
-        //google
-        server.auth.strategy('google', 'bell', {
-            provider: 'google',
-            password: 'cookie_encryption_password_secure',
-            clientId: '506238861912-n8t00jtopd1ltgfb87gv1vheolmhkdtm.apps.googleusercontent.com',
-            clientSecret: 'covirPl7PhuVHlae6VQODDiO',
-            isSecure: false
-        });
-    });
-
-
 server.register([
     {
         // regist good : request console log
@@ -121,21 +99,21 @@ server.register([
     }
     // $lab:coverage:on$
 
-    // // set auth
-    // server.auth.strategy('token', 'jwt', {
-    //     key: 'app_server!!!',
-    //     validateFunc: function (request, decodedToken, callback) {
-    //         // Check token timestamp
-    //         //console.log('decodedToken', decodedToken);
-    //         var moment = new Moment(decodedToken.iat * 1000);
-    //         var diff = moment.diff(moment);
-    //         if (diff > 30 * 24 * 60 * 60 * 1000) { // 30 days
-    //             return callback(null, false);
-    //         }
-    //         callback(null, true, decodedToken);
-    //     }
-    // });
-    // server.auth.default('token');
+    // set auth
+    server.auth.strategy('token', 'jwt', {
+        key: 'app_server!!!',
+        validateFunc: function (request, decodedToken, callback) {
+            // Check token timestamp
+            //console.log('decodedToken', decodedToken);
+            var moment = new Moment(decodedToken.iat * 1000);
+            var diff = moment.diff(moment);
+            if (diff > 30 * 24 * 60 * 60 * 1000) { // 30 days
+                return callback(null, false);
+            }
+            callback(null, true, decodedToken);
+        }
+    });
+    server.auth.default('token');
 
     // before handler
     server.ext('onPostAuth', function (request, reply) {
