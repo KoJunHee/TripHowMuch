@@ -23,7 +23,8 @@ exports.create = {
         },
         payload: {
             area: Joi.array().items(Joi.number()),
-            stay: Joi.array().items(Joi.number())
+            stay: Joi.array().items(Joi.number()),
+            title: Joi.string()
         }
     },
     auth: false,
@@ -33,7 +34,6 @@ exports.create = {
         Co(function* () {
             try {
                 var carts = yield Cart.find(request.params);
-                console.log(carts.length);
 
                 var num = 1;
                 if (carts.length == 0) {
@@ -46,7 +46,8 @@ exports.create = {
                     email: request.params.email,
                     area: request.payload.area,
                     stay: request.payload.stay,
-                    num: num
+                    num: num,
+                    title: request.payload.title
                 });
 
                 return cart;
@@ -127,7 +128,8 @@ exports.find = {
                 //reply 할것
                 var result = {
                     area: areaArr,
-                    stay: stayArr
+                    stay: stayArr,
+                    title: cart.title
                 }
 
                 return result;
@@ -184,12 +186,16 @@ exports.findUserCart = {
                             stayArr.push(stay);
                         }
 
+                        //title
+                        var title = carts[cartIndex].title;
+
                         //reply할 객체배열의 객체
                         var obj = {
                             email: carts[cartIndex].email,
                             area: areaArr,
                             stay: stayArr,
-                            num: carts[cartIndex].num
+                            num: carts[cartIndex].num,
+                            title: title
                         };
 
                         resultArr.push(obj);
@@ -225,7 +231,8 @@ exports.update = {
         },
         payload: {
             area: Joi.array().items(Joi.number()),
-            stay: Joi.array().items(Joi.number())
+            stay: Joi.array().items(Joi.number()),
+            title: Joi.string()
         }
     },
     auth: false,

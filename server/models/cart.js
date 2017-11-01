@@ -23,6 +23,9 @@ module.exports = {
         },
         stay: {
             type: 'array'
+        },
+        name:{
+            type: 'string'
         }
     }
 };
