@@ -233,6 +233,10 @@ exports.search = {
 
                 var tempArr = JSON.parse(body).response.body.items.item;
                 var resultArr = [];
+             
+                var totalCount={
+                    cnt: JSON.parse(body).response.body.totalCount 
+                };
 
                 //검색한 숙소들의 가격찾기
                 Co(function* () {
@@ -251,7 +255,10 @@ exports.search = {
                                 resultArr.push(object);
                             }
                         }
+
+                        resultArr.push(totalCount);
                         return resultArr;
+                        // return result;
                     } catch (err) {
                         throw err;
                     }

@@ -208,7 +208,7 @@ exports.search = {
                 .description('지역 코드'),
 
             sigunguCode: Joi.number().default("")
-                .valid(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26','27','28','29','30','31'])
+                .valid(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'])
                 .description('시군구 코드'),
 
             cat1: Joi.string().default("")
@@ -259,6 +259,10 @@ exports.search = {
 
                 var tempArr = JSON.parse(body).response.body.items.item;
                 var resultArr = [];
+             
+                var totalCount={
+                    cnt: JSON.parse(body).response.body.totalCount 
+                };
 
                 //검색한 여행지들의 가격찾기
                 Co(function* () {
@@ -278,6 +282,7 @@ exports.search = {
                             }
 
                         }
+                        resultArr.push(totalCount);
                         return resultArr;
                     } catch (err) {
                         throw err;
@@ -290,5 +295,3 @@ exports.search = {
             })
     }
 };
-
-
