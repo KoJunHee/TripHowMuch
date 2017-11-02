@@ -265,7 +265,7 @@ exports.search = {
                 var resultArr = [];
 
                 var totalCount = {
-                    cnt: JSON.parse(body).response.body.totalCount
+                    cnt: 0
                 };
 
                 //검색한 여행지들의 가격찾기
@@ -278,15 +278,17 @@ exports.search = {
                             if (area.price <= request.query.money) {
                                 var object = {
                                     contentid: area.contentid,
-                                    titile: area.title,
+                                    title: area.title,
                                     firstimage: area.firstimage,
                                     price: area.price
                                 };
                                 resultArr.push(object);
+                                totalCount.cnt++;
                             }
 
                         }
 
+                        //정렬
                         var sortingField = "price";
                         if (request.query.sort == 0) {
                             resultArr.sort(function (a, b) {  //가격 낮은 순
