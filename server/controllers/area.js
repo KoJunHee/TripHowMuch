@@ -223,7 +223,11 @@ exports.search = {
                 .description('페이지번호'),
 
             money: Joi.number().default(0)
-                .description('예산')
+                .description('예산'),
+
+            sort: Joi.number().default(0)
+                .valid('0', '1')
+                .description('낮은순 0 ,높은순 1')
         }
     },
     auth: false,
@@ -259,9 +263,9 @@ exports.search = {
 
                 var tempArr = JSON.parse(body).response.body.items.item;
                 var resultArr = [];
-             
-                var totalCount={
-                    cnt: JSON.parse(body).response.body.totalCount 
+
+                var totalCount = {
+                    cnt: JSON.parse(body).response.body.totalCount
                 };
 
                 //검색한 여행지들의 가격찾기
@@ -282,6 +286,18 @@ exports.search = {
                             }
 
                         }
+
+                        var sortingField = "price";
+                        if (request.query.sort == 0) {
+                            resultArr.sort(function (a, b) {  //가격 낮은 순
+                                return a[sortingField] - b[sortingField];
+                            });
+                        }else{
+                            resultArr.sort(function (a, b) {  //가격 높은 순
+                                return b[sortingField] - a[sortingField];
+                            });
+                        }
+
                         resultArr.push(totalCount);
                         return resultArr;
                     } catch (err) {
