@@ -277,6 +277,34 @@ exports.destroy = {
 };
 
 /*********************************************************************** 
+ *                   - 특정 유저의 특정 카트의 특정 content 삭제 (D)
+*************************************************************************/
+exports.destroyContent = {
+    description: '특정 유저의 특정 카트의 특정 content 삭제 (D)',
+    notes: ' ',
+    tags: ['api'],
+    validate: {
+        params: {
+            email: Joi.string().required(),
+            num: Joi.number().required(),
+            contentid: Joi.number().required()
+        }
+    },
+    auth: false,
+    handler: (request, reply) => {
+        // 삭제
+        Cart.destroy(request.params)
+            .exec((err) => {
+                // 결과
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(request.params.email + ' 의 ' + request.params.num + ' 번째 카트의' + request.params.contentid + ' 삭제');
+            });
+    }
+};
+
+/*********************************************************************** 
  *                         - 전체 카트 삭제 (D)
 *************************************************************************/
 exports.destroyAll = {
