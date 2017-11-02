@@ -183,6 +183,32 @@ exports.update = {
 };
 
 
+// /*********************************************************************** 
+//  *                              - 숙소 type 정보 수정 (U)
+// *************************************************************************/
+exports.updateType = {
+    description: '여행지 정보 수정 (U)',
+    notes: ' ',
+    tags: ['api'],
+    validate: {
+        payload: {
+            type: Joi.number().required()
+        }
+    },
+    auth: false,
+    handler: (request, reply) => {
+        // 수정
+        Stay.update({}, request.payload)
+            .exec((err, stay) => {
+                // 결과
+                if (err) {
+                    return reply(Boom.badImplementation(err));
+                }
+                reply(stay);
+            });
+    }
+};
+
 
 /*********************************************************************** 
  *                              - 숙박 검색

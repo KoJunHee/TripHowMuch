@@ -250,57 +250,124 @@ exports.update = {
 };
 
 /*********************************************************************** 
- *                   - 특정 유저의 특정 카트 삭제 (D)
+ *                   - 특정 유저의 특정 카트들 삭제 (D)
 *************************************************************************/
 exports.destroy = {
-    description: '특정 유저의 특정 카트 삭제 (D)',
+    description: '특정 유저의 특정 카트들 삭제 (D)',
+    notes: ' ',
+    tags: ['api'],
+    validate: {
+        params: {
+            email: Joi.string().required()
+        },
+        payload: {
+            num: Joi.array().items(Joi.number())
+        }
+    },
+    auth: false,
+    handler: (request, reply) => {
+
+
+        Co(function* () {
+            try {
+                // 카트 중에서 입력한 이메일에 해당하는 카트 배열 찾음
+                var carts = yield Cart.find(request.params);
+                console.log(carts);
+                console.log(request.payload.num);
+                //해당하는 카트가 있으면
+                if (carts) {
+
+                    // 배열로 들어온 num의 갯수만큼 반복문 돌림
+                    for (var i in request.payload.num) {
+                        for (var j in carts) {
+                            if (carts[j].num == request.payload.num[i]) {
+                                yield Cart.destroy({ email: request.params.email, num: request.payload.num[i] });
+                            }
+                        }
+                    }
+
+                }
+                return;
+
+            }
+            catch (err) {
+                throw err;
+            }
+        }).then(function () {
+            reply('success');
+        }).catch(function (err) {
+            return reply(Boom.badImplementation(err));
+        });
+
+    }
+};
+
+/*********************************************************************** 
+ *                   - 특정 유저의 특정 카트의 특정 contents 삭제 (D)
+*************************************************************************/
+exports.destroyContents = {
+    description: '특정 유저의 특정 카트의 특정 contents 삭제 (D)',
     notes: ' ',
     tags: ['api'],
     validate: {
         params: {
             email: Joi.string().required(),
             num: Joi.number().required()
+        },
+        payload: {
+            contents: Joi.array().items(Joi.number())
         }
     },
     auth: false,
     handler: (request, reply) => {
-        // 삭제
-        Cart.destroy(request.params)
-            .exec((err) => {
-                // 결과
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(request.params.email + ' 의 ' + request.params.num + '번째 카트 삭제');
-            });
-    }
-};
 
-/*********************************************************************** 
- *                   - 특정 유저의 특정 카트의 특정 content 삭제 (D)
-*************************************************************************/
-exports.destroyContent = {
-    description: '특정 유저의 특정 카트의 특정 content 삭제 (D)',
-    notes: ' ',
-    tags: ['api'],
-    validate: {
-        params: {
-            email: Joi.string().required(),
-            num: Joi.number().required(),
-            contentid: Joi.number().required()
-        }
-    },
-    auth: false,
-    handler: (request, reply) => {
-        // 삭제
-        Cart.destroy(request.params)
-            .exec((err) => {
-                // 결과
-                if (err) {
-                    return reply(Boom.badImplementation(err));
+
+        Co(function* () {
+            try {
+                var cart = yield Cart.find(request.params);
+                // 배열로 들어온 num의 갯수만큼 반복문 돌림
+                for (var i in request.payload.contents) {
+
+                    //여행지에서 지우고자 하는게 있는지
+                    for (var j in cart[0].area) {
+                        if (request.payload.contents[i] == cart[0].area[j]) {
+                            cart[0].area.splice(j, 1);
+                            yield cart[0].save();
+                        }
+                    }
+
+                    //숙소에서 지우고자 하는게 있는지
+                    for (var j in cart[0].stay) {
+                        if (request.payload.contents[i] == cart[0].stay[j]) {
+                            cart[0].stay.splice(j, 1);
+                            yield cart[0].save();
+                        }
+                    }
                 }
-                reply(request.params.email + ' 의 ' + request.params.num + ' 번째 카트의' + request.params.contentid + ' 삭제');
-            });
+
+                return;
+
+            }
+            catch (err) {
+                throw err;
+            }
+        }).then(function () {
+            reply('success');
+        }).catch(function (err) {
+            return reply(Boom.badImplementation(err));
+        });
+
+
+
+
+
+
+
+
+
+
+
+
     }
 };
 

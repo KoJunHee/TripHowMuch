@@ -126,6 +126,7 @@ exports.find = {
             '&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&' +
             'overviewYN=Y&transGuideYN=Y&_type=json';
 
+
         //request tour api
         Request({
             method: 'GET',
@@ -280,7 +281,8 @@ exports.search = {
                                     contentid: area.contentid,
                                     title: area.title,
                                     firstimage: area.firstimage,
-                                    price: area.price
+                                    price: area.price,
+                                    type : 0
                                 };
                                 resultArr.push(object);
                                 totalCount.cnt++;
@@ -313,3 +315,31 @@ exports.search = {
             })
     }
 };
+
+
+
+// /*********************************************************************** 
+//  *                              - 여행지 type 정보 수정 (U)
+// *************************************************************************/
+// exports.updateType = {
+//     description: '여행지 정보 수정 (U)',
+//     notes: ' ',
+//     tags: ['api'],
+//     validate: {
+//         payload: {
+//             type: Joi.number().required()
+//         }
+//     },
+//     auth: false,
+//     handler: (request, reply) => {
+//         // 수정
+//         Area.update({}, request.payload)
+//             .exec((err, area) => {
+//                 // 결과
+//                 if (err) {
+//                     return reply(Boom.badImplementation(err));
+//                 }
+//                 reply(area);
+//             });
+//     }
+// };

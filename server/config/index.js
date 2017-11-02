@@ -2,8 +2,6 @@ var config = {
     name: 'API',
     server: {
         // host: '172.31.7.75',
-        //host: '0.0.0.0',
-        // host:'192.168.1.131',
         host: '0.0.0.0',
         port: 8000,
         labels: ['api'],
