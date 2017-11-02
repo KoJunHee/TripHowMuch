@@ -11,7 +11,7 @@ const Boom = require('boom'),
     Co = require('co');
 
 /*********************************************************************** 
- *                              - 카트 등록 (C)
+ *                              - 카트 록 (C)
 *************************************************************************/
 exports.create = {
     description: '카트 등록 (C)',
@@ -38,7 +38,7 @@ exports.create = {
                 var num = 1;
                 if (carts.length == 0) {
                 } else {
-                    num = carts.length + 1;
+                    num = carts[carts.length - 1].num + 1;
                 }
 
                 // 등록
@@ -272,8 +272,6 @@ exports.destroy = {
             try {
                 // 카트 중에서 입력한 이메일에 해당하는 카트 배열 찾음
                 var carts = yield Cart.find(request.params);
-                console.log(carts);
-                console.log(request.payload.num);
                 //해당하는 카트가 있으면
                 if (carts) {
 

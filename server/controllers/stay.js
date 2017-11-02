@@ -137,7 +137,8 @@ exports.find = {
                             addr1: tempInfo.addr1,
                             addr2: tempInfo.addr2,
                             firstimage: tempInfo.firstimage,
-                            title: tempInfo.title
+                            title: tempInfo.title,
+                            type: 1
                         }
                         return resultInfo;
                     }
@@ -154,60 +155,60 @@ exports.find = {
 };
 
 /*********************************************************************** 
- *                         - 숙소 정보 수정 (U)
+ *                         - 숙소 가격 정보 수정 (U)
 *************************************************************************/
-exports.update = {
-    description: '숙소 정보 수정 (U)',
-    notes: ' ',
-    tags: ['api'],
-    validate: {
-        params: {
-            title: Joi.string().required()
-        },
-        payload: {
-            price: Joi.number().required()
-        }
-    },
-    auth: false,
-    handler: (request, reply) => {
-        // 수정
-        Stay.update({ title: request.params.title }, request.payload)
-            .exec((err, stay) => {
-                // 결과
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(stay);
-            });
-    }
-};
+// exports.update = {
+//     description: '숙소 가격 정보 수정 (U)',
+//     notes: ' ',
+//     tags: ['api'],
+//     validate: {
+//         params: {
+//             title: Joi.string().required()
+//         },
+//         payload: {
+//             price: Joi.number().required()
+//         }
+//     },
+//     auth: false,
+//     handler: (request, reply) => {
+//         // 수정
+//         Stay.update({ title: request.params.title }, request.payload)
+//             .exec((err, stay) => {
+//                 // 결과
+//                 if (err) {
+//                     return reply(Boom.badImplementation(err));
+//                 }
+//                 reply(stay);
+//             });
+//     }
+// };
 
 
 // /*********************************************************************** 
 //  *                              - 숙소 type 정보 수정 (U)
 // *************************************************************************/
-exports.updateType = {
-    description: '여행지 정보 수정 (U)',
-    notes: ' ',
-    tags: ['api'],
-    validate: {
-        payload: {
-            type: Joi.number().required()
-        }
-    },
-    auth: false,
-    handler: (request, reply) => {
-        // 수정
-        Stay.update({}, request.payload)
-            .exec((err, stay) => {
-                // 결과
-                if (err) {
-                    return reply(Boom.badImplementation(err));
-                }
-                reply(stay);
-            });
-    }
-};
+// exports.updateType = {
+//     description: '숙소 type 정보 수정 (U)',
+//     notes: ' ',
+//     tags: ['api'],
+//     validate: {
+//         payload: {
+//             type: Joi.number().required()
+//         }
+//     },
+//     auth: false,
+//     handler: (request, reply) => {
+//         // 수정
+//         Stay.update({}, request.payload)
+//             .exec((err, stay) => {
+//                 // 결과
+//                 if (err) {
+//                     return reply(Boom.badImplementation(err));
+//                 }
+//                 reply(stay);
+//             });
+//     }
+// };
 
 
 /*********************************************************************** 
@@ -274,30 +275,32 @@ exports.search = {
                         for (var itemIdex in tempArr) {
                             var stay = yield Stay.findOne({ contentid: tempArr[itemIdex].contentid });
 
-                            //검색한 숙소의 가격이 예산이하이면
-                            if (stay.price <= request.query.money) {
-                                var object = {
-                                    contentid: stay.contentid,
-                                    titile: stay.title,
-                                    firstimage: stay.firstimage,
-                                    price: stay.price
-                                };
-                                resultArr.push(object);
-                                totalCount.cnt++;
+                            if (stay) {
+                                //검색한 숙소의 가격이 예산이하이면
+                                if (stay.price <= request.query.money) {
+                                    var object = {
+                                        contentid: stay.contentid,
+                                        title: stay.title,
+                                        firstimage: stay.firstimage,
+                                        price: stay.price,
+                                        type: 1
+                                    };
+                                    resultArr.push(object);
+                                    totalCount.cnt++;
+                                }
                             }
                         }
-
-                           //정렬
-                           var sortingField = "price";
-                           if (request.query.sort == 0) {
-                               resultArr.sort(function (a, b) {  //가격 낮은 순
-                                   return a[sortingField] - b[sortingField];
-                               });
-                           }else{
-                               resultArr.sort(function (a, b) {  //가격 높은 순
-                                   return b[sortingField] - a[sortingField];
-                               });
-                           }
+                        //정렬
+                        var sortingField = "price";
+                        if (request.query.sort == 0) {
+                            resultArr.sort(function (a, b) {  //가격 낮은 순
+                                return a[sortingField] - b[sortingField];
+                            });
+                        } else {
+                            resultArr.sort(function (a, b) {  //가격 높은 순
+                                return b[sortingField] - a[sortingField];
+                            });
+                        }
 
 
                         resultArr.push(totalCount);

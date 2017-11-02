@@ -15,8 +15,7 @@ module.exports = {
             required: true
         },
         num: {
-            type: 'integer',
-            defaultsTo: 1,
+            type: 'integer'
         },
         area: {
             type: 'array'

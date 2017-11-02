@@ -139,7 +139,6 @@ exports.find = {
 
                 //가져온 정보
                 var tempInfo = JSON.parse(body).response.body.items.item;
-                console.log(tempInfo);
 
                 //필요한 정보만 추출
                 Co(function* () {
@@ -151,7 +150,8 @@ exports.find = {
                             addr1: tempInfo.addr1,
                             addr2: tempInfo.addr2,
                             firstimage: tempInfo.firstimage,
-                            title: tempInfo.title
+                            title: tempInfo.title,
+                            type: 0
                         }
                         return resultInfo;
                     }
@@ -213,11 +213,11 @@ exports.search = {
                 .description('시군구 코드'),
 
             cat1: Joi.string().default("")
-                .valid(['A01', 'A02'])
+                .valid('A01', 'A02')
                 .description('대분류'),
 
             cat2: Joi.string().default("")
-                .valid(['A0101', 'A0102'], ['A0201', 'A0202', 'A0203', 'A0204', 'A0205', 'A0206', 'A0207', 'A0208'])
+                .valid('A0101', 'A0102', 'A0201', 'A0202', 'A0203', 'A0204', 'A0205', 'A0206', 'A0207', 'A0208')
                 .description('중분류'),
 
             pageNo: Joi.number().default(1)
@@ -275,17 +275,19 @@ exports.search = {
                         for (var itemIdex in tempArr) {
                             var area = yield Area.findOne({ contentid: tempArr[itemIdex].contentid });
 
-                            //검색한 여행지의 가격이 예산이하이면
-                            if (area.price <= request.query.money) {
-                                var object = {
-                                    contentid: area.contentid,
-                                    title: area.title,
-                                    firstimage: area.firstimage,
-                                    price: area.price,
-                                    type : 0
-                                };
-                                resultArr.push(object);
-                                totalCount.cnt++;
+                            if (area) {
+                                //검색한 여행지의 가격이 예산이하이면
+                                if (area.price <= request.query.money) {
+                                    var object = {
+                                        contentid: area.contentid,
+                                        title: area.title,
+                                        firstimage: area.firstimage,
+                                        price: area.price,
+                                        type: 0
+                                    };
+                                    resultArr.push(object);
+                                    totalCount.cnt++;
+                                }
                             }
 
                         }
@@ -296,7 +298,7 @@ exports.search = {
                             resultArr.sort(function (a, b) {  //가격 낮은 순
                                 return a[sortingField] - b[sortingField];
                             });
-                        }else{
+                        } else {
                             resultArr.sort(function (a, b) {  //가격 높은 순
                                 return b[sortingField] - a[sortingField];
                             });
