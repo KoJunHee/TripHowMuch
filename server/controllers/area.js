@@ -250,7 +250,8 @@ exports.search = {
             request.query.cat2 +
             '&cat3=' +
             '&listYN=Y&MobileOS=ETC&MobileApp=tripHowMuch&_type=json&pageNo=' +
-            request.query.pageNo;
+            request.query.pageNo +
+            '&numOfRows=27';
 
         //request tour api
         Request({
@@ -304,8 +305,14 @@ exports.search = {
                             });
                         }
 
+                        //해당 개수가 없으면 에러 리턴
+                        if (totalCount.cnt == 0)
+                            return error;
+
+                        //해당 개수 있으면
                         resultArr.push(totalCount);
                         return resultArr;
+
                     } catch (err) {
                         throw err;
                     }

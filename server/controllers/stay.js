@@ -251,7 +251,8 @@ exports.search = {
             '&sigunguCode=' +
             request.query.sigunguCode +
             '&listYN=Y&MobileOS=ETC&MobileApp=tripHowMuch&_type=json&pageNo=' +
-            request.query.pageNo;
+            request.query.pageNo +
+            '&numOfRows=27';
 
         Request({
             method: 'GET',
@@ -302,15 +303,19 @@ exports.search = {
                             });
                         }
 
-
+                        //해당 개수가 없으면 에러 리턴
+                        if(totalCount.cnt==0)
+                            return error;
+                    
+                        //해당개수가 하나라도 있으면
                         resultArr.push(totalCount);
                         return resultArr;
-                        // return result;
+                        
                     } catch (err) {
                         throw err;
                     }
                 }).then(function (resultArr) {
-                    reply(resultArr);
+                        reply(resultArr);
                 }).catch(function (err) {
                     return reply(Boom.badImplementation(err));
                 });

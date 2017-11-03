@@ -11,7 +11,7 @@ const Boom = require('boom'),
     Co = require('co');
 
 /*********************************************************************** 
- *                              - 카트 록 (C)
+ *                              - 카트 등록 (C)
 *************************************************************************/
 exports.create = {
     description: '카트 등록 (C)',
@@ -354,17 +354,6 @@ exports.destroyContents = {
         }).catch(function (err) {
             return reply(Boom.badImplementation(err));
         });
-
-
-
-
-
-
-
-
-
-
-
 
     }
 };
