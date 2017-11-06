@@ -14,7 +14,7 @@ module.exports = [
     { method: 'GET', path: '/cart', config: Controller.findAll },                   //모든 카트 조회 (R)
     { method: 'GET', path: '/cart/{email}', config: Controller.findUserCart },      //특정 유저의 카트 목록 조회 (R)    
     { method: 'PUT', path: '/cart/{email}/{num}', config: Controller.update },      //특정 카트 수정 (U)         
-    { method: 'DELETE', path: '/cart/{email}/{num}', config: Controller.destroy },  //특정 카드 삭제 (D)
-    { method: 'DELETE', path: '/cart/{email}/{num}/{contentid}', config: Controller.destroyContent},  //특정 카드 삭제 (D)    
+    { method: 'DELETE', path: '/cart/{email}/{num}', config: Controller.destroy },  //특정 카트 삭제 (D)
+    { method: 'DELETE', path: '/cart/{email}/{num}/{contentid}', config: Controller.destroyContent},  //특정 카트 삭제 (D)    
     { method: 'DELETE', path: '/cart', config: Controller.destroyAll }              //모든 카트 삭제 (D)
 ];

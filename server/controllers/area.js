@@ -204,7 +204,7 @@ exports.search = {
     validate: {
         query: {
             areaCode: Joi.number().default("")
-                .valid(['1', '2', '3', '4', '5', '6', '7', '8', '31', '32', '33', '34', '35', '36', '37', '38', '39'])
+                .valid(['0', '1', '2', '3', '4', '5', '6', '7', '8', '31', '32', '33', '34', '35', '36', '37', '38', '39'])
                 .description('지역 코드'),
 
             sigunguCode: Joi.number().default("")
@@ -212,7 +212,7 @@ exports.search = {
                 .description('시군구 코드'),
 
             cat1: Joi.string().default("")
-                .valid(['A01', 'A02'])
+                .valid(['0', 'A01', 'A02'])
                 .description('대분류'),
 
             cat2: Joi.string().default("")
@@ -233,6 +233,12 @@ exports.search = {
     auth: false,
     handler: function (request, reply) {
 
+        if (request.query.areaCode == '0')
+            request.query.areaCode = "";
+
+        if (request.query.cat1 == '0')
+            request.query.cat1 = "";
+        
         //make request url
         var tourUrl = Config.openApi.baseUrl +
             '/rest/KorService/areaBasedList' +
@@ -294,7 +300,7 @@ exports.search = {
                             resultArr.sort(function (a, b) {  //가격 낮은 순
                                 return a[sortingField] - b[sortingField];
                             });
-                        }else{
+                        } else {
                             resultArr.sort(function (a, b) {  //가격 높은 순
                                 return b[sortingField] - a[sortingField];
                             });

@@ -193,7 +193,7 @@ exports.search = {
     validate: {
         query: {
             areaCode: Joi.number().default("")
-                .valid(['1', '2', '3', '4', '5', '6', '7', '8', '31', '32', '33', '34', '35', '36', '37', '38', '39'])
+                .valid(['0', '1', '2', '3', '4', '5', '6', '7', '8', '31', '32', '33', '34', '35', '36', '37', '38', '39'])
                 .description('지역 코드'),
 
             sigunguCode: Joi.number().default("")
@@ -213,6 +213,9 @@ exports.search = {
     },
     auth: false,
     handler: function (request, reply) {
+
+        if (request.query.areaCode == '0')
+            request.query.areaCode = "";
 
         //request url
         var tourUrl = Config.openApi.baseUrl +
@@ -261,17 +264,17 @@ exports.search = {
                             }
                         }
 
-                           //정렬
-                           var sortingField = "price";
-                           if (request.query.sort == 0) {
-                               resultArr.sort(function (a, b) {  //가격 낮은 순
-                                   return a[sortingField] - b[sortingField];
-                               });
-                           }else{
-                               resultArr.sort(function (a, b) {  //가격 높은 순
-                                   return b[sortingField] - a[sortingField];
-                               });
-                           }
+                        //정렬
+                        var sortingField = "price";
+                        if (request.query.sort == 0) {
+                            resultArr.sort(function (a, b) {  //가격 낮은 순
+                                return a[sortingField] - b[sortingField];
+                            });
+                        } else {
+                            resultArr.sort(function (a, b) {  //가격 높은 순
+                                return b[sortingField] - a[sortingField];
+                            });
+                        }
 
 
                         resultArr.push(totalCount);
