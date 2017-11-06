@@ -24,6 +24,9 @@ module.exports = {
         price: {
             type: 'integer',
             defaultsTo: 40000
+        },
+        type:{
+            type: 'integer'
         }
     }
 };

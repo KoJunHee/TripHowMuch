@@ -126,6 +126,7 @@ exports.find = {
             '&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&' +
             'overviewYN=Y&transGuideYN=Y&_type=json';
 
+
         //request tour api
         Request({
             method: 'GET',
@@ -138,7 +139,6 @@ exports.find = {
 
                 //가져온 정보
                 var tempInfo = JSON.parse(body).response.body.items.item;
-                console.log(tempInfo);
 
                 //필요한 정보만 추출
                 Co(function* () {
@@ -150,7 +150,8 @@ exports.find = {
                             addr1: tempInfo.addr1,
                             addr2: tempInfo.addr2,
                             firstimage: tempInfo.firstimage,
-                            title: tempInfo.title
+                            title: tempInfo.title,
+                            type: 0
                         }
                         return resultInfo;
                     }
@@ -216,7 +217,7 @@ exports.search = {
                 .description('대분류'),
 
             cat2: Joi.string().default("")
-                .valid(['A0101', 'A0102'], ['A0201', 'A0202', 'A0203', 'A0204', 'A0205', 'A0206', 'A0207', 'A0208'])
+                .valid('A0101', 'A0102', 'A0201', 'A0202', 'A0203', 'A0204', 'A0205', 'A0206', 'A0207', 'A0208')
                 .description('중분류'),
 
             pageNo: Joi.number().default(1)
@@ -255,7 +256,8 @@ exports.search = {
             request.query.cat2 +
             '&cat3=' +
             '&listYN=Y&MobileOS=ETC&MobileApp=tripHowMuch&_type=json&pageNo=' +
-            request.query.pageNo;
+            request.query.pageNo +
+            '&numOfRows=27';
 
         //request tour api
         Request({
@@ -280,16 +282,19 @@ exports.search = {
                         for (var itemIdex in tempArr) {
                             var area = yield Area.findOne({ contentid: tempArr[itemIdex].contentid });
 
-                            //검색한 여행지의 가격이 예산이하이면
-                            if (area.price <= request.query.money) {
-                                var object = {
-                                    contentid: area.contentid,
-                                    title: area.title,
-                                    firstimage: area.firstimage,
-                                    price: area.price
-                                };
-                                resultArr.push(object);
-                                totalCount.cnt++;
+                            if (area) {
+                                //검색한 여행지의 가격이 예산이하이면
+                                if (area.price <= request.query.money) {
+                                    var object = {
+                                        contentid: area.contentid,
+                                        title: area.title,
+                                        firstimage: area.firstimage,
+                                        price: area.price,
+                                        type: 0
+                                    };
+                                    resultArr.push(object);
+                                    totalCount.cnt++;
+                                }
                             }
 
                         }
@@ -306,8 +311,14 @@ exports.search = {
                             });
                         }
 
+                        //해당 개수가 없으면 에러 리턴
+                        if (totalCount.cnt == 0)
+                            return error;
+
+                        //해당 개수 있으면
                         resultArr.push(totalCount);
                         return resultArr;
+
                     } catch (err) {
                         throw err;
                     }
@@ -319,3 +330,31 @@ exports.search = {
             })
     }
 };
+
+
+
+// /*********************************************************************** 
+//  *                              - 여행지 type 정보 수정 (U)
+// *************************************************************************/
+// exports.updateType = {
+//     description: '여행지 정보 수정 (U)',
+//     notes: ' ',
+//     tags: ['api'],
+//     validate: {
+//         payload: {
+//             type: Joi.number().required()
+//         }
+//     },
+//     auth: false,
+//     handler: (request, reply) => {
+//         // 수정
+//         Area.update({}, request.payload)
+//             .exec((err, area) => {
+//                 // 결과
+//                 if (err) {
+//                     return reply(Boom.badImplementation(err));
+//                 }
+//                 reply(area);
+//             });
+//     }
+// };
