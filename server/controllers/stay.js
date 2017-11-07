@@ -281,7 +281,7 @@ exports.search = {
 
                             if (stay) {
                                 //검색한 숙소의 가격이 예산이하이면
-                                if (stay.price <= request.query.money) {
+                                if (stay.price <= request.query.money || request.query.money==0) {
                                     var object = {
                                         contentid: stay.contentid,
                                         title: stay.title,
